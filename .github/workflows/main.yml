@@ -1,0 +1,19 @@
+name: Main
+
+on: 
+  - workflow_dispatch
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@4
+      - name: Build
+        run: npx -y vsce package
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: "**/*.vsix"
