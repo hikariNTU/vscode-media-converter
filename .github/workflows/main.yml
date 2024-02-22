@@ -10,7 +10,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup Node
-        uses: actions/setup-node@4
+        uses: actions/setup-node@v4
       - name: Build
         run: npx -y vsce package
       - name: Release
