@@ -1,0 +1,67 @@
+{
+  "name": "vscode-media-converter",
+  "displayName": "Media Converter",
+  "description": "Convert media files to different format within files explorer",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.86.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "vscode-media-converter.convertMedia",
+        "title": "Convert Selected Media"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "vscode-media-converter.convertMedia",
+          "group": "7_modification"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Media Converter",
+      "properties": {
+        "vscode-media-converter.imageTargetFormat": {
+          "type": "string",
+          "default": "webp",
+          "description": "Target format for image files, if sharp support it."
+        },
+        "vscode-media-converter.imageQuality": {
+          "type": "number",
+          "default": 80,
+          "description": "Image Sharp quality setting. A number between 0 to 100."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run esbuild-base -- --minify",
+    "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node",
+    "esbuild": "npm run esbuild-base -- --sourcemap",
+    "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
+    "test-compile": "tsc -p ./"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.6",
+    "@types/node": "18.x",
+    "@types/vscode": "^1.86.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.2",
+    "@typescript-eslint/parser": "^7.0.2",
+    "@vscode/test-cli": "^0.0.6",
+    "@vscode/test-electron": "^2.3.9",
+    "esbuild": "^0.20.1",
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "sharp": "^0.33.2"
+  }
+}
