@@ -2,7 +2,7 @@
   "name": "vscode-media-converter",
   "displayName": "Media Converter",
   "description": "Convert media files to different format within files explorer",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.86.0"
   },
@@ -35,6 +35,11 @@
           "default": "webp",
           "description": "Target format for image files, if sharp support it."
         },
+        "vscode-media-converter.videoCommandDefault": {
+          "type": "string",
+          "default": "ffmpeg -i \"INPUT_FILE\" \"OUTPUT_FILE-converted.mp4\"",
+          "description": "The command used for video conversion. INPUT_FILE will be replace by the file path, and OUTPUT_FILE will be replace by the file path WITHOUT extension"
+        },
         "vscode-media-converter.imageQuality": {
           "type": "number",
           "default": 80,
@@ -44,10 +49,10 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "npm run esbuild-base -- --minify",
-    "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
-    "esbuild": "npm run esbuild-base -- --sourcemap",
-    "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
+    "vscode:prepublish": "npm run build-base -- --minify",
+    "build-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
+    "build": "npm run build-base -- --sourcemap",
+    "build-watch": "npm run build-base -- --sourcemap --watch",
     "test-compile": "tsc -p ./"
   },
   "devDependencies": {
