@@ -14,6 +14,8 @@ type FileEntry = {
 };
 
 const videoFormat = ["mov", "mp4", "wav", "mpeg", "mkv", "avi"];
+const audioFormat = ["wav", "mp3", "acc", "m4a", "ogg", "flac"];
+const ffmpegSupportFormat = audioFormat.concat(videoFormat);
 
 async function getVideoPreset() {
   const configs = vscode.workspace.getConfiguration("vscode-media-converter");
@@ -125,7 +127,7 @@ export function activate(context: vscode.ExtensionContext) {
         return;
       }
 
-      const [selectedFile, files] = args;
+      const [, files] = args;
       const result: string[] = [];
 
       vscode.window.withProgress(
@@ -147,7 +149,7 @@ export function activate(context: vscode.ExtensionContext) {
             const pathWithoutExt = chunks.join(".");
             progress.report({ message: file.path });
 
-            if (videoFormat.includes(originalFormat || "")) {
+            if (ffmpegSupportFormat.includes(originalFormat || "")) {
               if (!videoCommand) {
                 videoCommand = (await getVideoPreset()) || "";
               }
