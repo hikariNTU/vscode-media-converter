@@ -2,7 +2,7 @@
   "name": "vscode-media-converter",
   "displayName": "Media Converter",
   "description": "Convert media files to different format within files explorer",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "engines": {
     "vscode": "^1.86.0"
   },
@@ -30,27 +30,36 @@
     "configuration": {
       "title": "Media Converter",
       "properties": {
-        "vscode-media-converter.imageTargetFormat": {
-          "type": "string",
-          "default": "webp",
-          "description": "Target format for image files, if sharp support it."
-        },
-        "vscode-media-converter.videoCommandDefault": {
-          "type": "string",
-          "default": "ffmpeg -i \"INPUT_FILE\" \"OUTPUT_FILE-converted.mp4\"",
+        "vscode-media-converter.videoCommandPresets": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "To MP4::ffmpeg -i \"INPUT_FILE\" \"OUTPUT_FILE-converted.mp4\""
+          ],
           "description": "The command used for video conversion. INPUT_FILE will be replace by the file path, and OUTPUT_FILE will be replace by the file path WITHOUT extension"
         },
-        "vscode-media-converter.imageQuality": {
-          "type": "number",
-          "default": 80,
-          "description": "Image Sharp quality setting. A number between 0 to 100."
+        "vscode-media-converter.imagePresets": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "To Webp (High quality)::webp --quality=80",
+            "To Webp (Lossless)::webp --lossless",
+            "To Webp (Low quality)::webp --quality=20 --alphaQuality=50",
+            "To Avif::avif",
+            "To JPG::jpeg"
+          ],
+          "description": "The command used for image conversion. For the completed options see sharp's documentation."
         }
       }
     }
   },
   "scripts": {
     "vscode:prepublish": "npm run build-base -- --minify",
-    "build-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
+    "build-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --external:sharp --format=cjs --platform=node",
     "build": "npm run build-base -- --sourcemap",
     "build-watch": "npm run build-base -- --sourcemap --watch",
     "test-compile": "tsc -p ./"
@@ -59,6 +68,7 @@
     "@types/mocha": "^10.0.6",
     "@types/node": "18.x",
     "@types/vscode": "^1.86.0",
+    "@types/yargs-parser": "^21.0.3",
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/parser": "^7.0.2",
     "@vscode/test-cli": "^0.0.6",
@@ -68,7 +78,8 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "sharp": "^0.33.2"
+    "sharp": "^0.33.2",
+    "yargs-parser": "^21.1.1"
   },
   "repository": {
     "type": "git",
