@@ -5,7 +5,6 @@ import sharp from "sharp";
 import parser from "yargs-parser";
 import camelCase from "lodash/camelCase";
 import { transform } from "@svgr/core";
-import * as svgrPluginJsx from "@svgr/plugin-jsx";
 
 const exec_async = promisify(exec);
 
