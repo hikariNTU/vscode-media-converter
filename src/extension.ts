@@ -3,6 +3,9 @@ import { promisify } from "node:util";
 import * as vscode from "vscode";
 import sharp from "sharp";
 import parser from "yargs-parser";
+import camelCase from "lodash/camelCase";
+import { transform } from "@svgr/core";
+import * as svgrPluginJsx from "@svgr/plugin-jsx";
 
 const exec_async = promisify(exec);
 
@@ -116,6 +119,8 @@ async function getImagePreset() {
   };
 }
 
+const componentNameToken = "COMPONENT0NAME";
+
 export function activate(context: vscode.ExtensionContext) {
   let converter = vscode.commands.registerCommand(
     "vscode-media-converter.convertMedia",
@@ -184,4 +189,76 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(converter);
+
+  const pasteHandler = vscode.commands.registerTextEditorCommand(
+    "vscode-media-converter.pasteSvgAsReactComponent",
+    async (editor) => {
+      const lang = editor.document.languageId;
+      let clipboardText = await vscode.env.clipboard.readText();
+      let bufferText = "";
+      let componentName = "";
+      let possibleComponentName = "";
+      let svgComponent = "";
+
+      // get svg content from web if it is a link
+      if (clipboardText.startsWith("http")) {
+        possibleComponentName =
+          clipboardText.split("/").at(-1)?.replace(".svg", "") || "";
+        possibleComponentName = camelCase(possibleComponentName);
+        bufferText = await (await fetch(clipboardText)).text();
+      } else {
+        bufferText = clipboardText;
+      }
+
+      try {
+        svgComponent = await transform(
+          bufferText,
+          {
+            icon: true,
+            jsxRuntime: "automatic",
+            // for `typescriptreact` (tsx)
+            typescript: lang.startsWith("typescript"),
+            plugins: ["@svgr/plugin-jsx"],
+          },
+          {
+            componentName: componentNameToken,
+          }
+        );
+      } catch (e) {
+        vscode.window.showErrorMessage(
+          "Cannot transform clipboard text to component",
+          {
+            detail: `Clipboard Text: ${clipboardText.substring(
+              0,
+              50
+            )}, \nError: ${String(e)}`,
+            modal: true,
+          }
+        );
+        return;
+      }
+
+      svgComponent = svgComponent.replace(
+        "SVGProps<SVGSVGElement>",
+        "React.SVGProps<SVGSVGElement>"
+      );
+      svgComponent = svgComponent.replace(
+        'import type { SVGProps } from "react";\n',
+        ""
+      );
+      svgComponent = svgComponent.replace(/export default .*;$/g, "");
+      componentName =
+        (await vscode.window.showInputBox({
+          title: "Component Name",
+          value: componentName,
+        })) || "SvgIcon";
+      svgComponent = svgComponent.replaceAll(componentNameToken, componentName);
+
+      editor.edit((editBuilder) => {
+        editBuilder.replace(editor.selection.active, svgComponent);
+      });
+    }
+  );
+
+  context.subscriptions.push(pasteHandler);
 }

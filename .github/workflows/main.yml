@@ -24,7 +24,7 @@ jobs:
       - name: Install
         run: npm ci
       - name: Build
-        run: npx -y @vscode/vsce package
+        run: npm run build-vsix
       # - name: Generate release tag
       #   id: tag
       #   run: |

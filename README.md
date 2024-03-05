@@ -4,7 +4,8 @@
 
 ## Features
 
-Convert image/video files into desired formats.
+- Convert image/video files into desired formats within File Explorer.
+- Convert svg text or url from clipboard to React Component
 
 ## Requirements
 
@@ -14,9 +15,14 @@ https://www.ffmpeg.org/download.html
 
 ## Known Issues
 
-File types are not checked before processing.
+- Support `darwin-x64` only. Should be bundled with various os as well.
+- File types are not checked before processing.
 
 ## Release Notes
+
+### 0.0.5
+
+Add **Paste as SVG Component** command
 
 ### 0.0.3
 

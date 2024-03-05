@@ -2,7 +2,7 @@
   "name": "vscode-media-converter",
   "displayName": "Media Converter",
   "description": "Convert media files to different format within files explorer",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "engines": {
     "vscode": "^1.86.0"
   },
@@ -17,6 +17,10 @@
       {
         "command": "vscode-media-converter.convertMedia",
         "title": "Convert Selected Media"
+      },
+      {
+        "command": "vscode-media-converter.pasteSvgAsReactComponent",
+        "title": "Paste Svg as ReactComponent"
       }
     ],
     "menus": {
@@ -61,12 +65,14 @@
   },
   "scripts": {
     "vscode:prepublish": "npm run build-base -- --minify",
+    "build-vsix": "npx -y @vscode/vsce package",
     "build-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --external:sharp --format=cjs --platform=node",
     "build": "npm run build-base -- --sourcemap",
     "build-watch": "npm run build-base -- --sourcemap --watch",
     "test-compile": "tsc -p ./"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.202",
     "@types/mocha": "^10.0.6",
     "@types/node": "18.x",
     "@types/vscode": "^1.86.0",
@@ -80,6 +86,9 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
+    "@svgr/core": "^8.1.0",
+    "@svgr/plugin-jsx": "^8.1.0",
+    "lodash": "^4.17.21",
     "sharp": "^0.33.2",
     "yargs-parser": "^21.1.1"
   },
