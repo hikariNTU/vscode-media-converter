@@ -1,12 +1,23 @@
 import { exec } from "node:child_process";
 import { promisify } from "node:util";
 import * as vscode from "vscode";
-import sharp from "sharp";
 import parser from "yargs-parser";
 import camelCase from "lodash/camelCase";
 import { transform } from "@svgr/core";
 
 const exec_async = promisify(exec);
+async function getSharp() {
+  try {
+    const sharpMod = await import("sharp");
+    if ("default" in sharpMod) {
+      return sharpMod.default;
+    }
+    return sharpMod;
+  } catch (e) {
+    vscode.window.showErrorMessage('Could not load "sharp".' + String(e));
+    throw e;
+  }
+}
 
 type FileEntry = {
   fsPath: string;
@@ -171,6 +182,8 @@ export function activate(context: vscode.ExtensionContext) {
               }
 
               const newPath = `${pathWithoutExt}.${imageFormat}`;
+
+              const sharp = await getSharp();
 
               await sharp(file.fsPath)
                 .toFormat(imageFormat as any, imageOptions as any)

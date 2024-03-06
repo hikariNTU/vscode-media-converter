@@ -66,7 +66,7 @@
   "scripts": {
     "vscode:prepublish": "npm run build-base -- --minify",
     "build-vsix": "npx -y @vscode/vsce package",
-    "build-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --external:sharp --format=cjs --platform=node",
+    "build-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --external:sharp --format=cjs --platform=node --supported:dynamic-import=false",
     "build": "npm run build-base -- --sourcemap",
     "build-watch": "npm run build-base -- --sourcemap --watch",
     "test-compile": "tsc -p ./"
