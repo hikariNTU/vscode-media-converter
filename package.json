@@ -2,7 +2,7 @@
   "name": "vscode-media-converter",
   "displayName": "Media Converter",
   "description": "Convert media files to different format within files explorer",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "engines": {
     "vscode": "^1.86.0"
   },
@@ -64,8 +64,8 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "npm run build-base -- --minify",
-    "build-vsix": "npx -y @vscode/vsce package",
+    "package-vsix": "npx -y @vscode/vsce package",
+    "build-release": "npm run build-base -- --minify",
     "build-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --external:sharp --format=cjs --platform=node --supported:dynamic-import=false",
     "build": "npm run build-base -- --sourcemap",
     "build-watch": "npm run build-base -- --sourcemap --watch",
