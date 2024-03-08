@@ -91,7 +91,7 @@ jobs:
         run: echo "release_tag=MediaConverter-v$(jq .version -r -j < ./package.json)"
       - name: Release
         uses: softprops/action-gh-release@v1
-        if: ${{ !github.event.inputs.dry_run }}
+        if: ${{ github.event.inputs.dry_run == 'false' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
