@@ -83,11 +83,14 @@ jobs:
           node-version: 20
       - name: Download files
         uses: actions/download-artifact@v4
+      - name: Get Release name
+        id: release-name
+        run: echo "release_tag=MediaConverter-v$(jq .version -r -j < ./package.json)"
       - name: Release
         uses: softprops/action-gh-release@v1
         if: ${{ !github.event.inputs.dry_run }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: MediaConverter-v${{ jq -r .version < ./package.json }}
+          tag_name: ${{ steps.release-name.outputs.release_tag }}
           files: "**/*.vsix"
