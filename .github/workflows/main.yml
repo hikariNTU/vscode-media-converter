@@ -32,7 +32,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build-files
-          path: out/
+          path: ./out/
 
   bundle:
     name: Bundle - ${{ matrix.name }}
@@ -55,10 +55,13 @@ jobs:
             os: linux
       fail-fast: true
     steps:
+      - name: Create output folder
+        run: mkdir out
       - name: Download build
         uses: actions/download-artifact@v4
         with:
           name: build-files
+          path: out/
       - name: Test
         run: ls
       - name: Test2
@@ -70,7 +73,7 @@ jobs:
         with:
           node-version: 20
       - name: Install platform dependencies
-        run: npm i --production --cpu=${{ matrix.cpu }} --os=${{ matrix.os }}
+        run: npm i --omit=dev --cpu=${{ matrix.cpu }} --os=${{ matrix.os }}
       - name: Package VSIX
         run: npm run package-vsix --target=${{ matrix.name }}
       - name: Upload VSIX artifact
