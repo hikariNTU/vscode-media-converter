@@ -32,6 +32,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build-files
+          path: out/
 
   bundle:
     runs-on: ubuntu-latest
@@ -70,6 +71,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.name }}
+          path: ./*.vsix
 
   release:
     runs-on: ubuntu-latest
