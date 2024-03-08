@@ -64,8 +64,6 @@ jobs:
         with:
           name: build-files
           path: out/
-      - name: List files
-        run: ls && ls out
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -84,6 +82,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: bundle
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
       - name: Download files
         uses: actions/download-artifact@v4
       - name: Get Release name
